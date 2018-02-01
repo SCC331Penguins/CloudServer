@@ -1,4 +1,4 @@
-#SCC 331
+# SCC 331
 Software Engineering project for third year. 
 --------------------------------------------------
 
