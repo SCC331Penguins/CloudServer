@@ -63,6 +63,7 @@ def active_sensors(router_id, sensors):
 def ping(router_id):
     db = dbhandler.DbHandler()
     db.update_router_status(router_id)
+    print("ping: " + str(router_id))
 
 def login(packet_payload):
     db = dbhandler.DbHandler()

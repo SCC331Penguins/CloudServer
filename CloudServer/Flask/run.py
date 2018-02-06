@@ -1,4 +1,5 @@
 from flask import Flask
+import config
 from Flask.routes.user import user
 from Flask.routes.sensor import sensor
 
@@ -8,4 +9,4 @@ app.register_blueprint(user)
 app.register_blueprint(sensor)
 
 if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
+    app.run(debug=True, host=config.HOST, threaded=True)

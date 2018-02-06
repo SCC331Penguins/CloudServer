@@ -2,14 +2,13 @@ from .connection import *
 import config
 from Handlers import message_handler
 from Database import change_handler
-import zerorpc
 from threading import Thread
 
 class WAMP:
 
     def __init__(self):
         self.connections = [];
-        self.connection = Connection('local',handler=self.handleMessage)
+        self.connection = Connection('local', host=config.HOST, handler=self.handleMessage)
         self.connection.connect();
         pass
 
