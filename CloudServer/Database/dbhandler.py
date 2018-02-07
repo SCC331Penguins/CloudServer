@@ -41,6 +41,19 @@ class DbHandler:
     def retreive_user(self, username):
         return self.fetch_result(self.execute_query("SELECT * FROM Users WHERE username = '" + username + "';"))
 
+    def get_users_router(self, token):
+        user_id = authenticator.verify_token(token)
+        if user_id == None:
+            return None
+        result = self.fetch_result(self.execute_query("SELECT router_id FROM UserRouters WHERE user_id = " + str(user_id) +""))
+        return_result = []
+        for x in result[:]:
+            time = self.get_router_status(x[0])
+            x = x + (time,)
+            print(x)
+            return_result.append(x)
+        return return_result
+
     def login_user(self, username, password):
         result = self.retreive_user(username)
         if len(result) == 0:
@@ -52,6 +65,7 @@ class DbHandler:
 
     def update_router_status(self, router_id):
         self.execute_query("UPDATE Routers SET last_heard = "+ str(int(time.time())) +" WHERE router_id = '"+str(router_id)+"';")
+
     def register_router(self, user_id, router_id):
         router = self.retreive_router(router_id)
         if len(router) == 0:
@@ -69,15 +83,6 @@ class DbHandler:
         res = self.fetch_result(self.execute_query("SELECT router_id FROM Routers"))
         return res
 
-    def init_router(self, router_id, router_address):
-        checkRouter = "SELECT router_id FROM Routers WHERE router_id = " + str(router_id) + ";"
-        result = self.fetch_result(self.execute_query(checkRouter))
-        if len(result) == 0:
-            self.record_error(config.ERROR_INVALID_ROUTER, "Invalid router init from: " + str(router_address) + "")
-            return "Router does not exist"
-        initRouterQuery = "UPDATE Routers SET router_address = '" + str(router_address) + "' WHERE router_id = " + str(router_id) + ";"
-        self.execute_query(initRouterQuery)
-        return "updated"
 
     def init_sensor(self, sensor_id, router_id):
         checkSensorExists = "SELECT sensor_id FROM Sensor WHERE sensor_id = '" + str(sensor_id) + "';"
