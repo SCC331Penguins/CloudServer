@@ -71,13 +71,16 @@ class DbHandler:
         if len(router) == 0:
             self.record_error(config.ERROR_INVALID_ROUTER, "User attempted: " + str(user_id) + ", router does not exist: " + str(router_id) )
             return "Router not found"
-        registerQuery = "INSERT INTO UserRouters (user_id, router_id) VALUES ( " + str(user_id) +", " + str(router_id) + " )"
+        registerQuery = "INSERT INTO UserRouters (user_id, router_id) VALUES ( '" + str(user_id) +"', '" + str(router_id) + "' )"
         print(registerQuery)
         result = self.execute_query(registerQuery)
         if result == 0:
             self.record_error(config.ERROR_INVALID_ROUTER, "router already registered: " + str(router_id))
             return "router already registered"
         return "router registered"
+
+    def retreive_router(self, router_id):
+        return self.fetch_result(self.execute_query("SELECT router_id FROM Routers WHERE router_id = '"+router_id+"'"))
 
     def get_router_channels(self):
         res = self.fetch_result(self.execute_query("SELECT router_id FROM Routers"))

@@ -23,6 +23,7 @@ def set_sensor_config():
     return jsonify(payload=sensors)
 
 @sensor.route('/sensor/get_sensors', methods=['POST'])
+@authenticator.verify_flask_token
 def get_sensor_config():
     db = DbHandler()
     resp = db.get_router_sensors(request.json['router_id'])
