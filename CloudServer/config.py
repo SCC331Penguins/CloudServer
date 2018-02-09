@@ -13,3 +13,10 @@ ERROR_LOGIN_ATTEMPT = "lOGIN"
 ERROR_INVALID_ROUTER = "INVRO"
 ERROR_INVALID_SENSOR = "INVSE"
 ERROR_UNAUTHORISED_ACCESS = "UAUTH"
+
+def debug_route(f):
+    @wraps(f)
+    def print_request(*args, **kwargs):
+        print(request.json)
+        return f(*args, **kwargs)
+    return print_request

@@ -10,13 +10,15 @@ from Authentication import authenticator
 sensor = Blueprint('sensor',__name__)
 
 @sensor.route('/sensor/set_config', methods=['POST'])
+@authenticator.verify_flask_token
+@config.debug_route
 def set_sensor_config():
     #TODO: Parse json
-    payload_parse = request.json['payload']
-    router_id = payload_parse['router_id']
-    sensors = payload_parse['sensors']
+    router_id = request.json['router_id']
+    sensors = request.json['sensors']
     for x in sensors[:]:
         db = DbHandler()
+        print(x)
         db.set_sensor_mode(x['id'],x['config'])
     ch = ChangeHandler(None)
     ch.new_change(router_id, packet.Type.UPDATE_SENSORS)
