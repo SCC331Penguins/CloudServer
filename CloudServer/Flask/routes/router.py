@@ -19,7 +19,7 @@ def get_router():
 def claim_router():
     db = DbHandler()
     res = db.register_router(authenticator.verify_token(request.json['token']), request.json['router_id'])
-    return jsonify(res)
+    return jsonify(result=res)
 
 @router.route("/router/test", methods=['POST'])
 def test():

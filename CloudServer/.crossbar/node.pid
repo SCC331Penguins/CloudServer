@@ -1,13 +1,13 @@
 {
-    "pid": 9136, 
+    "pid": 15108, 
     "argv": [
-        "C:\\Users\\alexs\\AppData\\Local\\Programs\\Python\\Python36-32\\Scripts\\crossbar", 
+        "C:\\Users\\Alex Stout\\AppData\\Local\\Programs\\Python\\Python36-32\\Scripts\\crossbar", 
         "start"
     ], 
     "options": {
         "reactor": null, 
         "command": "start", 
-        "cbdir": "D:\\331\\CloudServer\\CloudServer\\.crossbar", 
+        "cbdir": "C:\\Third year - Second term\\331\\SET\\CloudServer\\CloudServer\\.crossbar", 
         "config": "config.json", 
         "personality": "community", 
         "logdir": null, 

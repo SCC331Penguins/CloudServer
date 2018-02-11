@@ -39,6 +39,11 @@ class Connection(ApplicationSession):
         Thread(target=self.startupChangeChecker).start()
         pass
 
+    def openPhoneSocket(self, uniqueid):
+        print("Opening phone socket " + str(uniqueid))
+        self.subscribe(lambda  d : self.onEvent(d,uniqueid),uniqueid)
+        pass
+
     def startupChangeChecker(self):
         ch = change_handler.ChangeHandler(self)
         ch.check_changes()

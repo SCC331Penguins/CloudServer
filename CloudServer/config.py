@@ -2,7 +2,7 @@ from flask import request
 from functools import wraps
 
 DEBUG = True                        #Change to false if printing json requests is to be turned off
-HOST = '192.168.1.73'              #IP for the flask server to run on
+HOST = '10.32.175.94'              #IP for the flask server to run on
 SHARED_SECRET_KEY = 'scc331sharedsecretkey'      #Server secret key
 DATABASE_NAME = 'database.sqlite3'  #Database name
 CHANGE_DATABASE_NAME = 'changes.sqlite3'  #Database name
@@ -17,6 +17,7 @@ ERROR_UNAUTHORISED_ACCESS = "UAUTH"
 def debug_route(f):
     @wraps(f)
     def print_request(*args, **kwargs):
-        print(request.json)
+        if DEBUG == True:
+            print(request.json)
         return f(*args, **kwargs)
     return print_request

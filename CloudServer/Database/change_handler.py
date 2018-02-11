@@ -20,14 +20,19 @@ class ChangeHandler:
                 pass
             time.sleep(1)
 
-    def handle_changes(self, router_id, type):
+    def handle_changes(self, id, type):
         if type == packet.Type.UPDATE_SENSORS:
-            packet_to_send = message_handler.update_sensors(router_id)
-            self.WAMP.sendEvent(router_id, packet_to_send)
-            self.execute_query("DELETE FROM Changes WHERE router_id = '" + str(router_id)+ "' AND type = " + str(type) + ";")
+            packet_to_send = message_handler.update_sensors(id)
+            self.WAMP.sendEvent(id, packet_to_send)
+        elif type == packet.Type.OPEN_SOCKET:
+            self.WAMP.openPhoneSocket(id)
+        self.execute_query("DELETE FROM Changes WHERE id = '" + str(id) + "' AND type = " + str(type) + ";")
 
-    def new_change(self, router_id, type):
-        self.execute_query("INSERT INTO Changes VALUES('" + str(router_id) +"', " + str(type) + ")")
+    def new_change(self, id, type):
+        self.execute_query("INSERT INTO Changes VALUES('" + str(id) +"', " + str(type) + ")")
+
+    def socket_change(self, uniqueid, type):
+        self.execute_query("INSERT INTO Changes VALUES('" + str(uniqueid) + "', " + str(type) + ")")
 
     def execute_query(self, query):
         result = []

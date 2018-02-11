@@ -12,9 +12,6 @@ class WAMP:
         self.connection.connect();
         pass
 
-    def run(self):
-        return "HEY RPC"
-
     def handleMessage(self, channel, conName, message):
         m = message_handler.HandlePacket()
         return_chann = m.handle_packet(message)

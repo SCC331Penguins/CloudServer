@@ -14,6 +14,7 @@ class Type(object):
     REQUEST_ROUTERS_SENSORS = 7
     UPDATE_SENSORS_PHONE = 22
     UPDATE_SCRIPT = 8
+    OPEN_SOCKET = 101
     #MISC
     ERROR = 404
     PING = 100
