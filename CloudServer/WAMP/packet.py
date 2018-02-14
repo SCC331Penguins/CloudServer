@@ -18,6 +18,7 @@ class Type(object):
     #MISC
     ERROR = 404
     PING = 100
+    NOTIFICATION = 13;
 
 def createPacket(type, token, payload, source):
     return {"token": token, "type":type, "payload":payload, "source":source}

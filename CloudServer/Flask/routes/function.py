@@ -4,6 +4,7 @@ from Database.change_handler import ChangeHandler
 from functools import wraps
 import config
 import json
+from Flask.Function import debug
 from WAMP import packet
 from Authentication import authenticator
 
@@ -14,7 +15,8 @@ def function_ping():
     return jsonify()
 
 @function.route("/function/update_token", methods=['POST'])
+@authenticator.verify_flask_token
 def open_socket():
-    db = ChangeHandler(None)
-    db.new_change(request.json['id'], packet.Type.OPEN_SOCKET)
+    db = DbHandler()
+    db.update_phone_token(request.json["token"],request.json["token_phone"])
     return jsonify()

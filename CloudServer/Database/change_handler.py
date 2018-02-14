@@ -26,6 +26,8 @@ class ChangeHandler:
             self.WAMP.sendEvent(id, packet_to_send)
         elif type == packet.Type.OPEN_SOCKET:
             self.WAMP.openPhoneSocket(id)
+        elif type == packet.Type.UPDATE_SCRIPT:
+            self.WAMP.sendEvent(id,message_handler.update_script(id))
         self.execute_query("DELETE FROM Changes WHERE id = '" + str(id) + "' AND type = " + str(type) + ";")
 
     def new_change(self, id, type):

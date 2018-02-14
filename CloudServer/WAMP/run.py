@@ -4,6 +4,7 @@ import multiprocessing
 from autobahn.twisted.websocket import WebSocketServerFactory
 from twisted.internet import reactor
 from threading import Thread
+from WAMP.Notifications.notification_handler import send_notification
 
 ServerInstance = None
 

@@ -8,7 +8,6 @@ from Flask.Function.debug import debug_json
 user = Blueprint('user',__name__)
 
 @user.route('/user/login', methods=['POST'])
-@debug_json
 def login():
     username = request.json['username']
     password = request.json['password']
@@ -20,7 +19,6 @@ def login():
     return jsonify(logged_in=result[0][0], message=result[0][1]), 200
 
 @user.route('/user/register', methods=['POST'])
-@debug_json
 def register():
     username = request.json['username']
     password = request.json['password']

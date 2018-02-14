@@ -53,6 +53,14 @@ def update_sensors(router_id):
     packet_to_send = packet.createPacket(packet.Type.UPDATE_SENSORS,0,payload,0)
     return packet_to_send
 
+def update_script(router_id):
+    db = dbhandler.DbHandler()
+    result = db.get_script(router_id)
+    payload_to_send = []
+    for x in result[:]:
+        payload_to_send.append(x[0])
+    return packet.createPacket(packet.Type.UPDATE_SCRIPT,0,payload_to_send,0)
+
 def active_sensors(router_id, sensors):
     print(sensors)
     db = dbhandler.DbHandler()
