@@ -1,9 +1,13 @@
 from twisted.internet.defer import inlineCallbacks
 from autobahn.twisted.wamp import ApplicationSession, ApplicationRunner
 import json
+import config
 from Database import dbhandler
 from Database import change_handler
 from threading import Thread
+from WAMP.LiveData.live_data_server import LiveDataServer
+from SimpleWebSocketServer import SimpleWebSocketServer
+
 class Connection(ApplicationSession):
 
     def __init__(self, name, port=8080, host='localhost',path='/ws', realm="default", channels=[], procedures=[], handler=None):
@@ -39,12 +43,17 @@ class Connection(ApplicationSession):
             self.subscribe(lambda d : self.onEvent(d,chan),chan)
             print(chan)
         Thread(target=self.startupChangeChecker).start()
+        Thread(target=self.startLiveDataServer).start()
         pass
 
     def openPhoneSocket(self, uniqueid):
         print("Opening phone socket " + str(uniqueid))
         self.subscribe(lambda  d : self.onEvent(d,uniqueid),uniqueid)
         pass
+
+    def startLiveDataServer(self):
+        server = SimpleWebSocketServer(config.HOST, 8000, LiveDataServer)
+        server.serveforever()
 
     def startupChangeChecker(self):
         ch = change_handler.ChangeHandler(self)
