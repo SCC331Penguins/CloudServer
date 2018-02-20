@@ -31,10 +31,12 @@ def test():
 def set_script():
     db = DbHandler()
     print(request.json)
-    db.record_script(request.json["router_id"], request.json['script'])
-    dbh = ChangeHandler(None)
-    dbh.new_change(request.json["router_id"], packet.Type.UPDATE_SCRIPT)
-    return jsonify(), 200
+    result = db.record_script(request.json["router_id"], request.json['script'])
+    if result == 1:
+        dbh = ChangeHandler(None)
+        dbh.new_change(request.json["router_id"], packet.Type.UPDATE_SCRIPT)
+        return jsonify(), 200
+    return jsonify(), 406
 
 @router.route("/router/get_actuators", methods=['POST'])
 def get_actuators():

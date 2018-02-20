@@ -1,0 +1,8 @@
+{
+  "debug":"True",
+  "secret_key":"scc331sharedsecretkey",
+  "host":"127.0.0.1",
+  "app_database_name":"database.sqlite3",
+  "changes_database_name":"changes.sqlite3",
+  "firebase_api_fcm":"AAAAmg2JIFkAPA91bFAeucUqBmbLwCQYdb91mOmuFgYXYa8fa_hGpODnM7r5cugEMdlllk0p4MOglh7gGc0LHL0xqFprfAHBRnbKW7zo0Vo5GkyeauPpopskjfRw_3co8K96NTYrptWrLwW76w60Uk9"
+}

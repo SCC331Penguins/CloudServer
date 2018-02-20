@@ -2,6 +2,10 @@ import json
 from Database import dbhandler
 from Authentication import authenticator
 from WAMP import packet
+from datetime import datetime
+from Database.historic_handler import HistoricHandler
+import calendar
+import time
 import jwt
 
 class HandlePacket():
@@ -38,10 +42,21 @@ class HandlePacket():
             pass
         elif type == packet.Type.PING:
             ping(return_channel)
+        elif type == packet.Type.SAVE_THL:
+            parse_record(message['payload'])
         else:
             print("invalid type")
             return
         return None
+
+def parse_record(json_string):
+    router_id = json_string['router_id']
+    sensors = json_string['sensors']
+    d = datetime.utcnow()
+    unixtime = calendar.timegm(d.utctimetuple())
+    hist = HistoricHandler()
+    for x in sensors[:]:
+        hist.record_reading(unixtime, router_id, x)
 
 def update_sensors(router_id):
     db = dbhandler.DbHandler()
@@ -51,6 +66,7 @@ def update_sensors(router_id):
     for x in result[:]:
         payload.append(dict(zip(payload_format,x)))
     packet_to_send = packet.createPacket(packet.Type.UPDATE_SENSORS,0,payload,0)
+    print(packet_to_send)
     return packet_to_send
 
 def update_script(router_id):

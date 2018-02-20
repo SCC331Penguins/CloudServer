@@ -143,9 +143,13 @@ class DbHandler:
     def record_script(self, router_id, script):
         router = self.retreive_router(router_id)
         if len(router) == 0:
-            return
+            return 0
+        result = self.fetch_result(self.execute_query("SELECT script FROM Scripts WHERE router_id = '"+str(router_id)+"'"))
+        for x in result[:]:
+            if x[0] == script:
+                return 0
         self.execute_query("INSERT INTO Scripts (router_id, script) VALUES ('"+str(router_id)+"', '"+str(script)+"')")
-        return
+        return 1
 
     def set_actuator(self, router_id, actuator_id, actuator_type):
         result = self.fetch_result(self.execute_query("SELECT * FROM Actuators WHERE actuator_id = '"+str(actuator_id)+"'"))

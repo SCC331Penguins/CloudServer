@@ -21,6 +21,8 @@ class Connection(ApplicationSession):
         self.channels = chan
         self.procedures = procedures
         self.handler = handler
+
+        print( "ws://"+self.host+":"+str(self.port)+self.path)
         pass
 
     def connect(self):

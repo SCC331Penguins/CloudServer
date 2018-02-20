@@ -1,12 +1,15 @@
 from flask import request
 from functools import wraps
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True                        #Change to false if printing json requests is to be turned off
-HOST = '192.168.1.73'              #IP for the flask server to run on
+HOST = '192.168.0.109'              #IP for the flask server to run on
 SHARED_SECRET_KEY = 'scc331sharedsecretkey'      #Server secret key
 DATABASE_NAME = 'database.sqlite3'  #Database name
 CHANGE_DATABASE_NAME = 'changes.sqlite3'  #Database name
-TOKEN_EXPIRE = 999999
+HISTORIC_DATABASE_NAME = 'historic.sqlite3'
+TOKEN_EXPIRE = 999999;
 
 #Error types
 ERROR_LOGIN_ATTEMPT = "lOGIN"

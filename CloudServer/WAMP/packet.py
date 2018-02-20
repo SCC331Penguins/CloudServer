@@ -19,6 +19,7 @@ class Type(object):
     ERROR = 404
     PING = 100
     NOTIFICATION = 13;
+    SAVE_THL = 15;
 
 def createPacket(type, token, payload, source):
     return {"token": token, "type":type, "payload":payload, "source":source}
