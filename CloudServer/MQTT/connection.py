@@ -5,8 +5,6 @@ import config
 from Database import dbhandler
 from Database import change_handler
 from threading import Thread
-from WAMP.LiveData.live_data_server import LiveDataServer
-from SimpleWebSocketServer import SimpleWebSocketServer
 
 class Connection(ApplicationSession):
 

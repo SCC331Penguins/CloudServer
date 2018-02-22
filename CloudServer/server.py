@@ -4,7 +4,7 @@ import multiprocessing
 
 
 def func1():
-    call(["python", "./WAMP/run.py"])
+    call(["python", "./MQTT/run.py"])
 
 def func2():
     call(["python", "./Flask/run.py"])

@@ -5,7 +5,7 @@ from functools import wraps
 import config
 import json
 from Flask.Function import debug
-from WAMP import packet
+from MQTT import packet
 from Authentication import authenticator
 from Database.historic_handler import HistoricHandler
 
@@ -23,6 +23,4 @@ def parse_record(json_string):
     sensors = json_string['sensors']
     for x in sensors[:]:
         print(x)
-
-
     pass

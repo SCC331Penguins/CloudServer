@@ -5,7 +5,7 @@ from functools import wraps
 import config
 import json
 from Flask.Function import debug
-from WAMP import packet
+from MQTT import packet
 from Authentication import authenticator
 
 function = Blueprint('function',__name__)

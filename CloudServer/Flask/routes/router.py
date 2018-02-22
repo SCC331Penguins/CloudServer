@@ -4,7 +4,7 @@ from Database.change_handler import ChangeHandler
 from functools import wraps
 import config
 import json
-from WAMP import packet
+from MQTT import packet
 from Authentication import authenticator
 
 router = Blueprint('router',__name__)

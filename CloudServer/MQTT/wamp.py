@@ -13,7 +13,7 @@ class WAMP:
         pass
 
     def handleMessage(self, channel, conName, message):
-        m = message_handler.HandlePacket()
+        m = message_handler.MessageHandler()
         return_chann = m.handle_packet(message)
         if return_chann != None:
             self.connection.sendEvent(return_chann['chan'],return_chann['packet'])

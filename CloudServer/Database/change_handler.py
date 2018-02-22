@@ -1,7 +1,7 @@
 import sqlite3
 import config
 import time
-from WAMP import packet
+from MQTT import packet
 from Handlers import message_handler
 
 class ChangeHandler:
