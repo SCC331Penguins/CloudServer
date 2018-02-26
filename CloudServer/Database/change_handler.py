@@ -2,14 +2,14 @@ import sqlite3
 import config
 import time
 from MQTT import packet
-from Handlers import message_handler
+from Handlers.message_handler import MessageHandler
 
 class ChangeHandler:
 
-    def __init__(self,WAMP):
+    def __init__(self, MQTTClient):
         self.connection = sqlite3.connect(config.CHANGE_DATABASE_NAME)
         self.cursor = self.connection.cursor()
-        self.WAMP = WAMP
+        self.MQTTClient = MQTTClient
 
     def check_changes(self):
         while(True):
@@ -21,13 +21,19 @@ class ChangeHandler:
             time.sleep(1)
 
     def handle_changes(self, id, type):
+        message_handler = MessageHandler(None)
         if type == packet.Type.UPDATE_SENSORS:
             packet_to_send = message_handler.update_sensors(id)
-            self.WAMP.sendEvent(id, packet_to_send)
-        elif type == packet.Type.OPEN_SOCKET:
-            self.WAMP.openPhoneSocket(id)
+            self.MQTTClient.send_message(type, packet_to_send, id)
         elif type == packet.Type.UPDATE_SCRIPT:
-            self.WAMP.sendEvent(id,message_handler.update_script(id))
+            #TODO REIMPLEMENT
+            #self.MQTTClient.sendEvent(id,message_handler.update_script(id))
+            pass
+        elif(type == packet.Type.NEW_CHANNEL):
+            print("NEW CHAN")
+            packet_to_send = message_handler.open_channel(id)
+            print(packet_to_send)
+            self.MQTTClient.send_message(type, packet_to_send, id)
         self.execute_query("DELETE FROM Changes WHERE id = '" + str(id) + "' AND type = " + str(type) + ";")
 
     def new_change(self, id, type):

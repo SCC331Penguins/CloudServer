@@ -2,6 +2,7 @@ import datetime
 import sqlite3
 import config
 import time
+import json
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import (TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired)
 from Authentication import authenticator
@@ -140,6 +141,14 @@ class DbHandler:
     def get_script(self, router_id):
         return self.fetch_result(self.execute_query("SELECT script FROM Scripts WHERE router_id = '"+str(router_id)+"'"))
 
+    def get_new_channel(self, router_id):
+        result = self.fetch_result(self.execute_query("SELECT channel_name FROM LiveDataChannels WHERE router_id = '"+str(router_id)+"'"))
+        self.execute_query("DELETE FROM LiveDataChannels WHERE router_id = '"+str(router_id)+"'")
+        return result
+
+    def new_channel(self, router_id, topic):
+        self.execute_query("INSERT INTO LiveDataChannels VALUES('"+str(router_id)+"','"+str(topic)+"')");
+
     def record_script(self, router_id, script):
         router = self.retreive_router(router_id)
         if len(router) == 0:
@@ -151,15 +160,16 @@ class DbHandler:
         self.execute_query("INSERT INTO Scripts (router_id, script) VALUES ('"+str(router_id)+"', '"+str(script)+"')")
         return 1
 
-    def set_actuator(self, router_id, actuator_id, actuator_type):
+    def set_actuator(self, router_id, actuator_id, actuator_type, functions):
         result = self.fetch_result(self.execute_query("SELECT * FROM Actuators WHERE actuator_id = '"+str(actuator_id)+"'"))
         if len(result) >= 1:
             self.execute_query("UPDATE Actuators SET router_id = '"+str(router_id)+"', type = '"+str(actuator_id)+"' WHERE actuator_id = '"+str(actuator_id)+"'")
         else:
-            self.execute_query("INSERT INTO Actuators VALUES ('"+str(actuator_id)+"','"+str(router_id)+"','"+str(actuator_type)+"')")
+            fun = json.dumps(functions)
+            self.execute_query("INSERT INTO Actuators VALUES ('"+str(actuator_id)+"','"+str(router_id)+"','"+str(actuator_type)+"', '"+str(fun)+"')")
 
     def get_actuators(self, router_id):
-        return self.fetch_result(self.execute_query("SELECT actuator_id, type FROM Actuators WHERE router_id = '"+str(router_id)+"'"))
+        return self.fetch_result(self.execute_query("SELECT actuator_id, type, functions FROM Actuators WHERE router_id = '"+str(router_id)+"'"))
 
     def execute_query(self, query):
         result = []

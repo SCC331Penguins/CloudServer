@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 from threading import Thread
 from Database.dbhandler import DbHandler
+from flask import jsonify
 from datetime import datetime
 import calendar
 import config
@@ -8,6 +9,7 @@ import json
 import time
 from Handlers.message_parser import MessageParser
 from Handlers.message_handler import MessageHandler
+from Database.change_handler import ChangeHandler
 
 class MQQTClient():
 
@@ -19,6 +21,7 @@ class MQQTClient():
         self.client.on_disconnect = self.on_disconnect
         db = DbHandler()
         self.channels = db.get_router_channels()
+        print(self.channels)
         self.last_message = ""
         self.last_topic = ""
         self.last_message_time = 0
@@ -28,19 +31,27 @@ class MQQTClient():
         self.client.connect(config.BROKER, port)
         self.subscribe()
         Thread(target=self.start_loop).start()
+        Thread(target=self.launch_batch_change_handler).start()
+
+    def launch_batch_change_handler(self):
+        ch = ChangeHandler(self)
+        ch.check_changes()
 
     def start_loop(self):
         print("Looping...")
         self.client.loop_forever()
 
     def on_message(self, client, userdata, message):
+        print(message.payload)
         if self.check_repeat(message) == True: return
-        print(message.topic + ", " + str(message.payload))
-        payload = json.loads(message.payload)
+        string = message.payload.decode("utf-8")
+        json_acceptable_string = string.replace("'", "\"")
+        payload = json.loads(json_acceptable_string)
         message_parsed = MessageParser(message.topic, payload)
         #Check if valid token
         if message_parsed.getId() == False:
             return
+        print(message.topic + ", " + str(message.payload))
         Thread(target=self.handle_message,args=(message_parsed,)).start()
 
     def handle_message(self, message):
@@ -66,19 +77,15 @@ class MQQTClient():
         print("Subscribed to : " + topic)
 
     def send_message(self, typeInt, payload, topic=None, msgObject={}):
-        msgObject[u'type'] = typeInt
-        msgObject[u'payload'] = payload
         self.last_message = json.dumps(msgObject,ensure_ascii=False).encode()
         self.last_topic = topic
         millis = int(round(time.time() * 1000))
-        print(millis)
         self.last_message_time = millis
-        self.publish(topic,json.dumps(msgObject,ensure_ascii=False).encode())
+        print(str(json.dumps(payload,ensure_ascii=False).encode()))
+        self.publish(topic,json.dumps(payload,ensure_ascii=False).encode())
 
     def on_connect(self, client, flags, userdata, rc):
         print("Connected to MQTT Broker: ", config.BROKER)
-        self.subscribe("SCC33102_R01")
-        ##self.send_message(64,{'MAC':'AC:CF:23:A1:FB:38','type':'Lights','command':'allLightsOff'},topic="SCC33102_R01")
 
     def on_disconnect(self):
         pass

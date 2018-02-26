@@ -1,7 +1,7 @@
 from mqtt.client.factory import MQTTFactory
 from twisted.internet import reactor
 from twisted.internet.endpoints import clientFromString
-from MQTT.MttqClientResolve import MQQTClient
+from MQTT.MttqClient import MQQTClient
 import config
 
 class MqttStart():
