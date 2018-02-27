@@ -7,7 +7,7 @@ import jwt
 def generate_token(id):
     try:
         payload = {'id': id}
-        return jwt.encode(payload,config.SHARED_SECRET_KEY,algorithm="HS256")
+        return (jwt.encode(payload,config.SHARED_SECRET_KEY,algorithm="HS256")).decode("utf-8")
     except Exception as e:
         print(e)
         return

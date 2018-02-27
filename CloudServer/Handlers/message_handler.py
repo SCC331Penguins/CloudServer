@@ -31,11 +31,9 @@ class MessageHandler():
             pass
         elif type == packet.Type.PING:
             self.ping(id)
-        elif type == packet.Type.SAVE_THL:
-            self.parse_record(message_payload)
         elif type == packet.Type.REG_ACTUATOR:
             self.register_actuators(id, message_payload)
-        elif type == "DATA":
+        elif type == packet.Type.SAVE_DATA:
             self.store_historic_data(id, message_payload)
         else:
             print("invalid type")
@@ -43,6 +41,7 @@ class MessageHandler():
         return None
 
     def store_historic_data(self, router_id, data):
+        if len(data) == 0: return;
         hh = HistoricHandler()
         sensor_list=data['sensors']
 
@@ -55,6 +54,7 @@ class MessageHandler():
 
     def register_actuators(self, router_id, message):
         db = dbhandler.DbHandler()
+        db.clear_actuators(router_id)
         for x in message[:]:
             print(x)
             mac = x["mac"]
@@ -98,7 +98,8 @@ class MessageHandler():
         print(sensors)
         db = dbhandler.DbHandler()
         for x in sensors[:]:
-            db.init_sensor(x['id'], router_id)
+            print(x)
+            db.init_sensor(x, router_id)
         pass
 
     def ping(self, router_id):

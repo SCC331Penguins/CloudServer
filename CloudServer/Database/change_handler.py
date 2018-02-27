@@ -34,10 +34,10 @@ class ChangeHandler:
             packet_to_send = message_handler.open_channel(id)
             print(packet_to_send)
             self.MQTTClient.send_message(type, packet_to_send, id)
-        self.execute_query("DELETE FROM Changes WHERE id = '" + str(id) + "' AND type = " + str(type) + ";")
+        self.execute_query("DELETE FROM Changes WHERE id = '" + str(id) + "' AND type = '" + str(type) + "';")
 
     def new_change(self, id, type):
-        self.execute_query("INSERT INTO Changes VALUES('" + str(id) +"', " + str(type) + ")")
+        self.execute_query("INSERT INTO Changes VALUES('" + str(id) +"', '"+ str(type) +"')")
 
     def socket_change(self, uniqueid, type):
         self.execute_query("INSERT INTO Changes VALUES('" + str(uniqueid) + "', " + str(type) + ")")

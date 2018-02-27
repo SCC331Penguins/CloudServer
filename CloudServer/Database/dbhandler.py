@@ -87,11 +87,7 @@ class DbHandler:
         return self.fetch_result(self.execute_query("SELECT router_id FROM Routers"))
 
     def init_sensor(self, sensor_id, router_id):
-        checkSensorExists = "SELECT sensor_id FROM Sensor WHERE sensor_id = '" + str(sensor_id) + "';"
-        result = self.fetch_result(self.execute_query(checkSensorExists))
-        if len(result) == 0:
-            self.record_error(config.ERROR_INVALID_SENSOR, "Router " + str(router_id) + " tried to register sensor: " + str(sensor_id) + ", does not exist")
-            return "sensor does not exist"
+        self.execute_query("INSERT INTO Sensor VALUES('"+str(sensor_id)+"', 0)")
         findSensor = "SELECT sensor_id FROM RouterSensors WHERE sensor_id = '" + str(sensor_id) + "';"
         result = self.fetch_result(self.execute_query(findSensor))
         if len(result) >= 1:
@@ -159,6 +155,10 @@ class DbHandler:
                 return 0
         self.execute_query("INSERT INTO Scripts (router_id, script) VALUES ('"+str(router_id)+"', '"+str(script)+"')")
         return 1
+
+    def clear_actuators(self, router_id):
+        #self.execute_query("DELETE FROM Actuators WHERE router_id ='"+str(router_id)+"'")
+        pass
 
     def set_actuator(self, router_id, actuator_id, actuator_type, functions):
         result = self.fetch_result(self.execute_query("SELECT * FROM Actuators WHERE actuator_id = '"+str(actuator_id)+"'"))
