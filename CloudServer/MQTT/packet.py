@@ -18,10 +18,10 @@ class Type(object):
     #MISC
     ERROR = 404
     PING = "PING"
-    NOTIFICATION = 13
     SAVE_DATA = "DATA"
     NEW_CHANNEL = "NCHAN"
     REG_ACTUATOR = "REGACT"
+    NOTIFICATION = "NOTIF"
 
 def createPacket(type, token, payload, source):
     return {"token": token, "type":type, "payload":payload, "source":source}

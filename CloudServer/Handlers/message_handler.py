@@ -5,6 +5,7 @@ from MQTT import packet
 from datetime import datetime
 from Database.historic_handler import HistoricHandler
 import calendar
+from Handlers.notification_handler import send_notification
 
 class MessageHandler():
 
@@ -35,10 +36,16 @@ class MessageHandler():
             self.register_actuators(id, message_payload)
         elif type == packet.Type.SAVE_DATA:
             self.store_historic_data(id, message_payload)
+        elif type == packet.Type.NOTIFICATION:
+            self.forward_notification(id, message_payload)
         else:
             print("invalid type")
             return
         return None
+
+    def forward_notification(self, router_id, data):
+        send_notification(router_id, data)
+
 
     def store_historic_data(self, router_id, data):
         if len(data) == 0: return;

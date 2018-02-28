@@ -7,6 +7,7 @@ import json
 from Flask.Function import debug
 from MQTT import packet
 from Authentication import authenticator
+from Handlers.notification_handler import send_notification
 from Database.historic_handler import HistoricHandler
 
 historic = Blueprint('historic',__name__)
@@ -30,6 +31,13 @@ def get_history():
     #id = authenticator.verify_token(request.json['token'])
     router_id = request.json['router_id']
     sensor_id = request.json['sensor_id']
+    start = request.json['start']
+    end = request.json['end']
+    print(request.json)
+
+    if start == 0 or end == 0:
+        start = None
+        end = None
 
     hh = HistoricHandler()
 
@@ -40,13 +48,19 @@ def get_history():
 
         for x in sensors[:]:
             s_id = x[0]
-            res = hh.get_reading(router_id, s_id)
+            res = hh.get_reading(router_id, s_id, start=start, end=end)
+            print("Results: " + res);
             data.update({s_id:res})
 
         return jsonify(data=data)
 
-    result = hh.get_reading(router_id, sensor_id)
+    result = hh.get_reading(router_id, sensor_id, start=start, end=end)
     ret = {}
     ret.update({sensor_id:result})
 
     return jsonify(data=ret)
+
+@historic.route("/history/test", methods=['POST'])
+def test():
+    send_notification("SCC33102_R01",{"title":"Notification","message":"Hey this is a message"})
+    return jsonify(result=0),200
